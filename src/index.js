@@ -6,8 +6,8 @@ import hook from './hook';
 import defaults from './defaults';
 import request from './request'
 import * as ZI from 'zero-immutable';
-// import Router from './router';
-// import { Route, Redirect, Switch, Prompt, withRouter, Link, NavLink } from 'rr4i';
+import Router from './router';
+import { Route, Redirect, Switch, Prompt, withRouter, Link, NavLink } from 'rr4i';
 
 const { setIn, getIn } = ZI;
 
@@ -24,14 +24,14 @@ export default {
 
   request,
 
-  // Router,
-  // Route,
-  // Redirect,
-  // Switch,
-  // Prompt,
-  // withRouter,
-  // Link,
-  // NavLink
+  Router,
+  Route,
+  Redirect,
+  Switch,
+  Prompt,
+  withRouter,
+  Link,
+  NavLink
 };
 
 export {
@@ -45,12 +45,12 @@ export {
   setIn,
   getIn,
   request,
-  // Router,
-  // Route,
-  // Redirect,
-  // Switch,
-  // Prompt,
-  // withRouter,
-  // Link,
-  // NavLink
+  Router,
+  Route,
+  Redirect,
+  Switch,
+  Prompt,
+  withRouter,
+  Link,
+  NavLink
 };

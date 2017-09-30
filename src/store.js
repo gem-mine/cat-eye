@@ -1,8 +1,8 @@
 import { createStore as _createStore, applyMiddleware, combineReducers, compose } from 'redux';
-// import { routerReducer } from 'rr4i';
+import { routerReducer } from 'rr4i';
 
 import createMiddleware from './middleware';
-// import routerMiddleware from './routerMiddleware';
+import routerMiddleware from './routerMiddleware';
 
 export let store;
 
@@ -46,6 +46,6 @@ function createReducer(models, reducers) {
   return combineReducers({
     ...reducers,
     ...modelReducers,
-    // routing: routerReducer
+    routing: routerReducer
   });
 }
