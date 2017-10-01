@@ -7,7 +7,7 @@ import defaults from './defaults';
 import request from './request'
 import * as ZI from 'zero-immutable';
 import Router from './router';
-import { Route, Redirect, Switch, Prompt, withRouter, Link, NavLink } from 'rr4i';
+import rr, { Route, Redirect, Switch, Prompt, withRouter, Link, NavLink } from 'rr4i';
 
 const { setIn, getIn } = ZI;
 
@@ -24,6 +24,7 @@ export default {
 
   request,
 
+  rr,
   Router,
   Route,
   Redirect,
@@ -45,6 +46,7 @@ export {
   setIn,
   getIn,
   request,
+  rr,
   Router,
   Route,
   Redirect,

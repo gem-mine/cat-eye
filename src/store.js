@@ -8,7 +8,7 @@ export let store;
 
 export function createStore(models, reducers, initialState, middlewares = []) {
   const middleware = applyMiddleware(
-    // routerMiddleware(),
+    routerMiddleware(),
     ...middlewares,
     createMiddleware()
   );

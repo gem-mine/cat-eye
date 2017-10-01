@@ -1,6 +1,6 @@
 {
   "name": "cat-eye",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "make react-redux easy",
   "keywords": [
     "react-redux",
@@ -20,7 +20,7 @@
     "axios": "^0.16.2",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
-    "rr4i": "^0.1.0",
+    "rr4i": "^0.1.1",
     "zero-immutable": "^0.1.1"
   },
   "peerDependencies": {
