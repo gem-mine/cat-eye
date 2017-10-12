@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import {actions} from './actions'
 
 function smart(mapStateToProps, mapDispatchToProps) {
   return connect(
@@ -7,11 +6,11 @@ function smart(mapStateToProps, mapDispatchToProps) {
       return mapStateToProps(state, ownProps);
     },
     null,
-    props => {
+    (stateProps, dispatchProps, ownProps) => {
       if (mapDispatchToProps) {
-        return Object.assign({}, props, mapDispatchToProps(actions, props));
+        return Object.assign({}, stateProps, dispatchProps, mapDispatchToProps(stateProps), ownProps);
       }
-      return { ...props };
+      return Object.assign({}, stateProps, dispatchProps, ownProps);
     }
   );
 }
