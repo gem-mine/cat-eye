@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import model from './model';
+import smart from './connect';
 import { actions } from './actions';
 import render from './render';
 import hook from './hook';
@@ -17,6 +18,7 @@ export default {
   hook,
   defaults,
   connect,
+  smart,
   render,
   ZI,
   setIn,
@@ -41,6 +43,7 @@ export {
   hook,
   defaults,
   connect,
+  smart,
   render,
   ZI,
   setIn,
