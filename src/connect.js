@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import {actions} from './actions'
 
 function smart(mapStateToProps, mapDispatchToProps) {
   return connect(
