@@ -7,10 +7,11 @@ function smart(mapStateToProps, mapDispatchToProps) {
     },
     null,
     (stateProps, dispatchProps, ownProps) => {
+      let props = Object.assign({}, stateProps, dispatchProps, ownProps);
       if (mapDispatchToProps) {
-        return Object.assign({}, stateProps, dispatchProps, mapDispatchToProps(stateProps), ownProps);
+        props = Object.assign(props, mapDispatchToProps(props));
       }
-      return Object.assign({}, stateProps, dispatchProps, ownProps);
+      return props;
     }
   );
 }
