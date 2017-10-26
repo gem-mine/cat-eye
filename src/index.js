@@ -5,10 +5,12 @@ import { actions } from './actions';
 import render from './render';
 import hook from './hook';
 import defaults from './defaults';
-import request from './request'
+import request from './request';
 import * as ZI from 'zero-immutable';
 import Router from './router';
 import rr, { Route, Redirect, Switch, Prompt, withRouter, Link, NavLink } from 'rr4i';
+import queryString from './queryString';
+import { urlFor, router } from './routerHelper';
 
 const { setIn, getIn } = ZI;
 
@@ -34,7 +36,11 @@ export default {
   Prompt,
   withRouter,
   Link,
-  NavLink
+  NavLink,
+
+  queryString,
+  urlFor,
+  router
 };
 
 export {
@@ -57,5 +63,8 @@ export {
   Prompt,
   withRouter,
   Link,
-  NavLink
+  NavLink,
+  queryString,
+  urlFor,
+  router
 };
