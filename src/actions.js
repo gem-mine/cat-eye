@@ -1,5 +1,6 @@
 import { dispatch, getState } from './middleware';
 import { options } from './defaults';
+import { setIn } from 'zero-immutable';
 
 const SEP = '/';
 
@@ -24,8 +25,11 @@ export function addActions(modelName, reducers = {}, effects = {}) {
   // 把 effects 也挂载到 actions 中对应的命名空间里
   const scope = {
     actions: actions[modelName],
-    getState: ()=> {
-      return getState()[modelName]
+    setField: data => {
+      return scope.actions.setField(data);
+    },
+    getState: () => {
+      return getState()[modelName];
     }
   };
 
@@ -52,7 +56,11 @@ export function addActions(modelName, reducers = {}, effects = {}) {
  */
 export function resolveReducers(modelName, reducers = {}) {
   return Object.keys(reducers).reduce((acc, cur) => {
-    acc[`${modelName}${SEP}${cur}`] = reducers[cur];
+    acc[`${modelName}${SEP}${cur}`] = reducers[cur].bind({
+      setField: data => {
+        return setIn(getState()[modelName], data);
+      }
+    });
     return acc;
   }, {});
 }
