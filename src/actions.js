@@ -56,11 +56,17 @@ export function addActions(modelName, reducers = {}, effects = {}) {
  */
 export function resolveReducers(modelName, reducers = {}) {
   return Object.keys(reducers).reduce((acc, cur) => {
-    acc[`${modelName}${SEP}${cur}`] = reducers[cur].bind({
-      setField: data => {
-        return setIn(getState()[modelName], data);
-      }
-    });
+    acc[`${modelName}${SEP}${cur}`] = function(state, data) {
+      return reducers[cur].bind({
+        setField: data => {
+          return setIn(state, data);
+        },
+        getState: () => {
+          return state;
+        }
+      })(data, getState);
+    };
+
     return acc;
   }, {});
 }
@@ -76,7 +82,7 @@ function each(obj, callback) {
  * @param {String} actionName action name，是 model 中 reduces 或者 effects 的 key
  */
 function actionCreator(modelName, actionName) {
-  return data => {
+  return function(data) {
     return dispatch({ type: `${modelName}${SEP}${actionName}`, data });
   };
 }

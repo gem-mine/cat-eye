@@ -8,10 +8,11 @@ import defaults from './defaults';
 import request from './request';
 import * as ZI from 'zero-immutable';
 import Router from './router';
-import rr, { Route, Redirect, Switch, Prompt, withRouter, Link, NavLink } from 'rr4i';
+import * as rr from 'rr4i';
 import queryString from './queryString';
 import { urlFor, router } from './routerHelper';
-
+import pathToRegexp from 'path-to-regexp';
+const { Route, Redirect, Switch, Prompt, withRouter, Link, NavLink } = rr;
 const { setIn, getIn } = ZI;
 
 export default {
@@ -39,6 +40,7 @@ export default {
   NavLink,
 
   queryString,
+  pathToRegexp,
   urlFor,
   router
 };
@@ -65,6 +67,7 @@ export {
   Link,
   NavLink,
   queryString,
+  pathToRegexp,
   urlFor,
   router
 };

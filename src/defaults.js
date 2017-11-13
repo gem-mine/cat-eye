@@ -2,7 +2,7 @@ import {effects, addEffect} from './effects'
 
 export const options = {
   // global initial state
-  // initialState: undefined,
+  // state: undefined,
 
   // Should be one of ['browser', 'hash', 'memory']
   // Learn more: https://github.com/ReactTraining/history/blob/master/README.md

@@ -9,11 +9,11 @@ export default function model(m) {
     m.reducers = {};
   }
   // 为所有 model 的 reducer 注入 setField 方法，这样 可以使用 actions[name].setField
-  m.reducers.setField = (state, data) => {
-    return setIn(state, data);
+  m.reducers.setField = function(data, getState) {
+    return setIn(this.getState(), data);
   };
 
-  const reducer = getReducer(resolveReducers(m.name, m.reducers), m.initialState);
+  const reducer = getReducer(resolveReducers(m.name, m.reducers), m.state);
 
   const _model = {
     name: m.name,
