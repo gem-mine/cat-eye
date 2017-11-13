@@ -117,10 +117,8 @@ export const router = {
     });
   },
   Routes,
-  log() {
-    if (console && console.table) {
-      console.table(_routers);
-    }
+  getFlat() {
+    return _routers;
   }
 };
 
