@@ -1,6 +1,6 @@
 {
   "name": "cat-eye",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "make react-redux easy",
   "keywords": [
     "react-redux",
@@ -19,6 +19,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "decode-uri-component": "^0.2.0",
+    "path-to-regexp": "^2.1.0",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "rr4i": "^0.1.4",
