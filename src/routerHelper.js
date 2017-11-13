@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch, Redirect } from 'rr4i';
 import pathToRegexp from 'path-to-regexp';
-import queryString from 'query-string';
+import queryString from './queryString';
 import smart from './connect';
 
 // 缓存拍扁的路由
