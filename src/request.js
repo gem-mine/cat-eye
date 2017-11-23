@@ -68,14 +68,14 @@ function proxy(cfg) {
       }
     }
     if (isFunction(callback.before)) {
-      params = callback.before(params, ins);
+      params = callback.before(params, ins, cfg);
     }
 
     if (params !== false) {
       let timer;
       if (isFunction(callback.loading)) {
         timer = setTimeout(() => {
-          callback.loading(params, ins);
+          callback.loading(params, ins, cfg);
         }, params.whenToShowLoading);
       }
 
@@ -89,16 +89,16 @@ function proxy(cfg) {
       function success(data) {
         if (isFunction(callback.success)) {
           if (isFunction(callback.transform)) {
-            data = callback.transform(data);
+            data = callback.transform(data, params, ins, cfg);
           }
-          const result = callback.success(data, params);
+          const result = callback.success(data, params, ins, cfg);
           return result;
         }
       }
 
       function cb(name, data) {
         if (isFunction(callback[name])) {
-          return callback[name](data, params);
+          return callback[name](data, params, ins, cfg);
         }
       }
 
@@ -115,7 +115,7 @@ function proxy(cfg) {
             flag = callback.verify(res) !== false;
           }
           if (flag) {
-            cb('success', data);
+            success(data);
             cb('complete', data);
             return Promise.resolve(data);
           } else {
