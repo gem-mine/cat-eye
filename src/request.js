@@ -171,7 +171,7 @@ function proxy(cfg) {
   METHODS.forEach(key => {
     request[key] = function(url, config) {
       config = config || {};
-      config.method = key;
+      config.method = key.toUpperCase();
       return new request(url, config);
     };
   });
