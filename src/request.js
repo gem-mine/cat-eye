@@ -9,7 +9,9 @@ const defaults = {
   whenToShowLoading,
   before: null, // function，返回false会阻止请求发送
   loading: function() {
-    console.warn(`当你看到此提示时，说明存在服务端超过 ${whenToShowLoading} ms 的请求，并且没有进行全局 loading 配置，请参看 request.config 进行配置`);
+    console.warn(
+      `当你看到此提示时，说明存在服务端超过 ${whenToShowLoading} ms 的请求，并且没有进行全局 loading 配置，请参看 request.config 进行配置`
+    );
   },
   verify: function(res) {
     return true;
@@ -20,8 +22,7 @@ const defaults = {
     console.warn(`当你看到此提示时，说明存在请求异常，并且没有全局 error 配置，请参看 request.config 进行配置`);
   },
   customError: false, // 是否自定义处理异常，不使用全局异常处理
-  complete: null,
-  withCredentials: true
+  complete: null
 };
 
 const KEYS = [
@@ -53,10 +54,16 @@ function proxy(cfg) {
       options = options || {};
       options.url = url;
     }
+
     if (cfg.prefix) {
       options.url = cfg.prefix.replace(/^\/$/, '') + '/' + options.url.replace(/^\//, '');
     }
+
+    if (cfg.mode === 'cors' && !cfg.wds) {
+      options.url = cfg.url.replace(/^\/$/, '') + '/' + options.url.replace(/^\//, '');
+    }
     let params = { ...defaults, ...domain_default_config[name], ...options };
+
     this.params = params;
     this.request = ins;
     const customError = params.customError;
@@ -150,6 +157,7 @@ function proxy(cfg) {
               return Promise.reject(err);
             } else {
               cb('error', err);
+              return new Promise(() => {});
             }
           } catch (e) {
             // 非请求造成异常，直接报错
@@ -190,7 +198,7 @@ function config(options) {
 
 /**
  * 为多个跨域进行代理
- * :params configs: 
+ * :params configs:
  *   {
  *     name: {
  *       prefix: 路由前缀，用来匹配转发,
@@ -198,7 +206,7 @@ function config(options) {
  *         local: 代理地址,
  *         dev: 代理地址,
  *         production: 代理地址
- *       }        
+ *       }
  *     },
  *     ...
  *   }

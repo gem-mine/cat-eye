@@ -4,44 +4,113 @@ import pathToRegexp from 'path-to-regexp';
 import queryString from './queryString';
 import smart from './connect';
 
-// 缓存拍扁的路由
+const ROOT = '__root__';
+
+// 缓存拍扁的路由信息
 const _routers = {};
 // 缓存拍扁的子路由
 const _sub = {
-  __root__: [] // 根的子路由
+  [ROOT]: [] // 根的子路由
+};
+// 缓存 config
+const _config = {
+  components: {
+    NotFound: props => {
+      return <div>404 not found</div>;
+    },
+    Forbidden: props => {
+      return <div>403 forbidden</div>;
+    }
+  }
 };
 
-// 添加路由
-function add(item) {
-  // key: 路由别名
-  // path: 路由路径
-  // component: 对应组件
-  // description: 可选，说明
-  // permission: 可选，需要权限验证的提供一个function，返回 true 表示通过验证，否则返回一个无权限的 Component
-  const { key, path, component, description, permission } = item;
-  if (path === undefined) {
-    console.warn(`router: ${key} ${description} miss path config`);
+function parseRedirect(route) {
+  let to = route.redirect;
+  // 有子路由的不处理 redirect，防止是跳转进入子路由引起死循环
+  if (!route.sub && to) {
+    to = typeof to === 'object' ? urlFor(to.key, to.params) : _routers[to].path;
+    if (route.path !== to) {
+      return <Redirect exact from={route.path} to={to} key={route.key} />;
+    }
   }
-
-  _sub.__root__.push(item);
-  _routers[key] = item;
-  parseSub(item);
 }
 
-function parseSub(parent) {
-  const sub = parent.sub;
-  if (sub) {
-    const arr = [];
-    Object.keys(sub).forEach(key => {
-      const item = sub[key];
-      item.path = `${parent.path}${item.path}`.replace(/\/\//g, '/');
-      item.key = `${parent.key}.${key}`;
-      arr.push(item);
-      _routers[item.key] = item;
-      parseSub(item);
-    });
-    _sub[parent.key] = arr;
+/**
+ * 添加一个路由
+ */
+function add(parent, items) {
+  let keyPath = '';
+  let pathPrefix = '';
+  if (parent) {
+    if (parent.keyPath) {
+      keyPath = `${parent.keyPath}.${parent.key}`;
+    } else {
+      keyPath = parent.key;
+    }
+    if (parent.path && parent.path !== '/') {
+      pathPrefix = parent.path;
+    }
   }
+  Object.keys(items).forEach(key => {
+    const item = items[key];
+    item.key = key;
+    item.keyPath = keyPath;
+    item.path = `${pathPrefix}${item.path}`.replace(/\/\/|\/$/g, '') || '/';
+    let subKey = ROOT;
+    if (parent) {
+      item.parent = parent;
+      let flag = false; // 祖先是否是子路由
+      const kp = getParentKeyPath(keyPath);
+      // 祖先存在是子路由, 应往最近的具有子路由的祖先中添加
+      if (kp) {
+        subKey = kp;
+      }
+    }
+    _sub[subKey].push(item);
+    const selfPath = keyPath ? `${keyPath}.${item.key}` : item.key;
+    _routers[selfPath] = item;
+
+    if (item.index) {
+      let target = { ...item };
+      delete target.index;
+      if (item.component) {
+        target.path = pathPrefix || '/';
+        target.exact = true;
+      } else if (item.redirect) {
+        target = {
+          key: item.parent.key,
+          path: item.parent.path,
+          redirect: item.redirect
+        };
+      }
+      _sub[subKey].push(target);
+    }
+
+    // 具有子路由
+    if (item.sub) {
+      _sub[selfPath] = [];
+      add(item, item.sub);
+    }
+    // 具有子模块
+    if (item.module) {
+      add(item, item.module);
+    }
+  });
+}
+
+function getParentKeyPath(keyPath) {
+  const arr = keyPath.split('.');
+  let i = arr.length;
+  let p;
+  while (i >= 0) {
+    const key = arr.slice(0, i).join('.');
+    p = _sub[key];
+    if (p) {
+      return key;
+    }
+    i -= 1;
+  }
+  return false;
 }
 
 const Permission = receiveProps => {
@@ -52,74 +121,36 @@ const Permission = receiveProps => {
       render={props => {
         const path = props.match.path;
 
-        let p;
-        if (typeof permission === 'function') {
-          p = permission(receiveProps);
-        } else {
-          p = true;
+        let p = receiveProps;
+        let arr = [];
+        while (p) {
+          if (typeof p.permission === 'function') {
+            arr.push(p.permission);
+          }
+          p = p.parent;
         }
-        if (p === true) {
+
+        let flag = true;
+        for (let i = 0; i < arr.length; i++) {
+          flag = arr[i](receiveProps);
+          if (flag !== true) {
+            break;
+          }
+        }
+        if (flag === true) {
           // 合法
           return <Component {...props} />;
         } else {
           // 不合法
-          if (p) {
+          if (flag) {
             // 验证函数返回Component，直接显示
-            return p;
+            return flag;
           }
-          return <div>permission denied</div>;
+          return <_config.components.Forbidden {...props} />;
         }
       }}
     />
   );
-};
-
-export const Routes = props => {
-  const { path, mapStateToProps, children } = props;
-  return (
-    <Switch>
-      {router.get(path, mapStateToProps)}
-      {children}
-    </Switch>
-  );
-};
-
-export const router = {
-  get(path, mapStateToProps) {
-    let rs;
-    let result = [];
-    const PermissionRoute = smart(mapStateToProps)(Permission);
-    if (path) {
-      rs = _sub[path];
-    } else {
-      rs = _sub.__root__;
-    }
-
-    if (rs && rs.length) {
-      result = result.concat(
-        rs.map(route => {
-          const rest = { ...route };
-          if (rest.sub) {
-            delete rest.exact;
-          }
-          return <PermissionRoute {...rest} key={rest.key} />;
-        })
-      );
-    }
-    return result;
-  },
-  // 路由统一注册入口
-  register(items) {
-    Object.keys(items).forEach(key => {
-      const item = items[key];
-      item.key = key;
-      add(item);
-    });
-  },
-  Routes,
-  getFlat() {
-    return _routers;
-  }
 };
 
 /**
@@ -168,3 +199,75 @@ export function urlFor(key, params) {
   url = `${url}${c}${queryString.stringify(obj)}`;
   return url;
 }
+
+export const Routes = props => {
+  const { path, children } = props;
+  let rs;
+  let mapStateToProps = props.mapStateToProps;
+  if (!mapStateToProps) {
+    mapStateToProps = _config.mapStateToProps;
+  }
+  const PermissionRoute = smart(mapStateToProps)(Permission);
+  if (path) {
+    rs = _sub[path];
+  } else {
+    rs = _sub.__root__;
+  }
+
+  if (rs && rs.length) {
+    const routes = [];
+    const redirects = [];
+
+    rs.forEach(route => {
+      if (route) {
+        if (route.redirect) {
+          redirects.push(parseRedirect(route));
+        } else if (route.component) {
+          routes.push(<PermissionRoute {...route} key={route.key} />);
+        }
+      }
+    });
+
+    return (
+      <div>
+        <Switch>
+          {routes}
+          {redirects}
+          {children}
+          <Route component={_config.components.NotFound} />
+        </Switch>
+      </div>
+    );
+  }
+};
+
+export const router = {
+  // 配置
+  config(params) {
+    const { mapStateToProps, components } = params;
+    _config.mapStateToProps = mapStateToProps;
+    if (components) {
+      const { NotFound, Forbidden } = components;
+      if (NotFound) {
+        _config.components.NotFound = NotFound;
+      }
+      if (Forbidden) {
+        _config.components.Forbidden = Forbidden;
+      }
+    }
+  },
+  // 路由统一注册入口
+  register(keyPath, items, isSub) {
+    if (typeof keyPath === 'object') {
+      items = keyPath;
+      keyPath = '';
+    }
+    const parent = _routers[keyPath];
+
+    add(parent, items);
+  },
+  Routes,
+  getFlat() {
+    return _routers;
+  }
+};

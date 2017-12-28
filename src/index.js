@@ -10,7 +10,7 @@ import * as ZI from 'zero-immutable';
 import Router from './router';
 import * as rr from 'rr4i';
 import queryString from './queryString';
-import { urlFor, router } from './routerHelper';
+import { urlFor, router, Routes } from './routerHelper';
 import pathToRegexp from 'path-to-regexp';
 const { Route, Redirect, Switch, Prompt, withRouter, Link, NavLink } = rr;
 const { setIn, getIn } = ZI;
@@ -42,7 +42,8 @@ export default {
   queryString,
   pathToRegexp,
   urlFor,
-  router
+  router,
+  Routes
 };
 
 export {
@@ -69,5 +70,6 @@ export {
   queryString,
   pathToRegexp,
   urlFor,
-  router
+  router,
+  Routes
 };
