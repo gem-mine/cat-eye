@@ -5,7 +5,7 @@ export const models = [];
 
 export default function model(m) {
   m = validateModel(m);
-  if(!m.reducers) {
+  if (!m.reducers) {
     m.reducers = {};
   }
   // 为所有 model 的 reducer 注入 setField 方法，这样 可以使用 actions[name].setField
@@ -61,8 +61,8 @@ function validateModel(m = {}) {
 
 /**
  * 生成了 redux 中标准的 reducer（就是switch分支的那个函数）
- * @param {Object} reducers 
- * @param {Object} initialState 
+ * @param {Object} reducers
+ * @param {Object} initialState
  */
 // If initialState is not specified, then set it to null
 function getReducer(reducers, initialState = null) {
@@ -76,7 +76,7 @@ function getReducer(reducers, initialState = null) {
 
 /**
  * 过滤 reducers 或 effects，去掉值非 function 的
- * @param {Object} reducers 
+ * @param {Object} reducers
  */
 function filterReducers(reducers) {
   if (!reducers) {

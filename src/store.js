@@ -7,11 +7,7 @@ import routerMiddleware from './routerMiddleware';
 export let store;
 
 export function createStore(models, reducers, initialState, middlewares = []) {
-  const middleware = applyMiddleware(
-    routerMiddleware(),
-    ...middlewares,
-    createMiddleware()
-  );
+  const middleware = applyMiddleware(routerMiddleware(), ...middlewares, createMiddleware());
 
   const enhancers = [middleware];
 
