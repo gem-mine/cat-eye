@@ -1,8 +1,13 @@
 {
   "name": "cat-eye",
-  "version": "0.3.0",
+  "version": "2.1.0-alpha",
   "description": "make react-redux easy",
-  "keywords": ["react-redux", "model", "mirror", "mirrorx"],
+  "keywords": [
+    "react-redux",
+    "model",
+    "mirror",
+    "mirrorx"
+  ],
   "author": {
     "email": "caolvchong@gmail.com",
     "name": "洪军钊"
@@ -16,13 +21,13 @@
     "decode-uri-component": "^0.2.0",
     "path-to-regexp": "^2.1.0",
     "react-redux": "^5.0.6",
+    "rr4i": "next",
     "redux": "^3.7.2",
-    "rr4i": "^0.1.4",
     "zero-immutable": "^0.1.1"
   },
   "peerDependencies": {
-    "react": "^0.14.9",
-    "react-dom": "^0.14.9"
+    "react": "^15.0.0-0 || ^16.0.0-0",
+    "react-dom": "^15.0.0-0 || ^16.0.0-0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
