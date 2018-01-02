@@ -28,9 +28,20 @@ function parseRedirect(route) {
   let to = route.redirect;
   // 有子路由的不处理 redirect，防止是跳转进入子路由引起死循环
   if (!route.sub && to) {
-    to = typeof to === 'object' ? urlFor(to.key, to.params) : _routers[to].path;
-    if (route.path !== to) {
-      return <Redirect exact from={route.path} to={to} key={route.key} />;
+    if (typeof to === 'object') {
+      to = urlFor(to.key, to.params);
+    } else {
+      const t = _routers[to];
+      if (t) {
+        to = t.path;
+      } else {
+        console.warn(`route ${route.redirect} not exist, redirect fail, please check route config`);
+      }
+    }
+    if (to) {
+      if (route.path !== to) {
+        return <Redirect exact from={route.path} to={to} key={route.key} />;
+      }
     }
   }
 }
@@ -55,7 +66,14 @@ function add(parent, items) {
     const item = items[key];
     item.key = key;
     item.keyPath = keyPath;
-    item.path = `${pathPrefix}${item.path}`.replace(/\/\/|\/$/g, '') || '/';
+    if (item.path) {
+      item.path = `${pathPrefix}${item.path}`.replace(/\/\/|\/$/g, '') || '/';
+    } else {
+      item.path = '/';
+      if (item.component) {
+        item.exact = true;
+      }
+    }
     let subKey = ROOT;
     if (parent) {
       item.parent = parent;
@@ -229,14 +247,12 @@ export const Routes = props => {
     });
 
     return (
-      <div>
-        <Switch>
-          {routes}
-          {redirects}
-          {children}
-          <Route component={_config.components.NotFound} />
-        </Switch>
-      </div>
+      <Switch>
+        {routes}
+        {redirects}
+        {children}
+        <Route component={_config.components.NotFound} />
+      </Switch>
     );
   }
 };
