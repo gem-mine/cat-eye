@@ -1,36 +1,36 @@
-import { effects } from './effects';
-import { hooks } from './hook';
+import { effects } from './effects'
+import { hooks } from './hook'
 
 function warning() {
   throw new Error(
     'You are calling "dispatch" or "getState" without applying mirrorMiddleware! ' +
       'Please create your store with mirrorMiddleware first!'
-  );
+  )
 }
 
-export let dispatch = warning;
+export let dispatch = warning
 
-export let getState = warning;
+export let getState = warning
 
 // 只在 store.js 中被使用
 export default function createMiddleware() {
   return middlewareAPI => {
-    dispatch = middlewareAPI.dispatch;
-    getState = middlewareAPI.getState;
+    dispatch = middlewareAPI.dispatch
+    getState = middlewareAPI.getState
 
     return next => action => {
-      let effectResult;
+      let effectResult
       // 异步的话这里其实只是为了最终能到 reducer，日志中能看到 dispatch，并无实际作用
-      const result = next(action);
+      const result = next(action)
 
       // 处理 effects
       if (typeof effects[action.type] === 'function') {
-        effectResult = effects[action.type](action.data, getState);
+        effectResult = effects[action.type](action.data, getState)
       }
 
-      hooks.forEach(hook => hook(action, getState));
+      hooks.forEach(hook => hook(action, getState))
 
-      return effectResult || result;
-    };
-  };
+      return effectResult || result
+    }
+  }
 }
