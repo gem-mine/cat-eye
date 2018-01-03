@@ -1,62 +1,62 @@
-import { resolveReducers, addActions } from './actions';
-import { setIn } from 'zero-immutable';
+import { resolveReducers, addActions } from './actions'
+import { setIn } from 'zero-immutable'
 
-export const models = [];
+export const models = []
 
 export default function model(m) {
-  m = validateModel(m);
+  m = validateModel(m)
   if (!m.reducers) {
-    m.reducers = {};
+    m.reducers = {}
   }
   // 为所有 model 的 reducer 注入 setField 方法，这样 可以使用 actions[name].setField
-  m.reducers.setField = function(data, getState) {
-    return setIn(this.getState(), data);
-  };
+  m.reducers.setField = function (data, getState) {
+    return setIn(this.getState(), data)
+  }
 
-  const reducer = getReducer(resolveReducers(m.name, m.reducers), m.state);
+  const reducer = getReducer(resolveReducers(m.name, m.reducers), m.state)
 
   const _model = {
     name: m.name,
     reducer
-  };
+  }
 
-  models.push(_model);
+  models.push(_model)
 
   // 挂到 actions 和 effects
-  addActions(m.name, m.reducers, m.effects);
+  addActions(m.name, m.reducers, m.effects)
 
-  return _model;
+  return _model
 }
 
 function validateModel(m = {}) {
-  const { name, reducers, effects } = m;
+  const { name, reducers, effects } = m
 
-  const isObject = target => Object.prototype.toString.call(target) === '[object Object]';
+  const isObject = target => Object.prototype.toString.call(target) === '[object Object]'
 
   if (!name || typeof name !== 'string') {
-    throw new Error(`Model name must be a valid string!`);
+    throw new Error(`Model name must be a valid string!`)
   }
 
   if (name === 'routing') {
-    throw new Error(`Model name can not be "routing", it is used by react-router-redux!`);
+    throw new Error(`Model name can not be "routing", it is used by react-router-redux!`)
   }
 
   if (models.some(item => item.name === name)) {
-    throw new Error(`Model "${name}" has been created, please select another name!`);
+    throw new Error(`Model "${name}" has been created, please select another name!`)
   }
 
   if (reducers !== undefined && !isObject(reducers)) {
-    throw new Error(`Model reducers must be a valid object!`);
+    throw new Error(`Model reducers must be a valid object!`)
   }
 
   if (effects !== undefined && !isObject(effects)) {
-    throw new Error(`Model effects must be a valid object!`);
+    throw new Error(`Model effects must be a valid object!`)
   }
 
-  m.reducers = filterReducers(reducers);
-  m.effects = filterReducers(effects);
+  m.reducers = filterReducers(reducers)
+  m.effects = filterReducers(effects)
 
-  return m;
+  return m
 }
 
 /**
@@ -68,10 +68,10 @@ function validateModel(m = {}) {
 function getReducer(reducers, initialState = null) {
   return (state = initialState, action) => {
     if (typeof reducers[action.type] === 'function') {
-      return reducers[action.type](state, action.data);
+      return reducers[action.type](state, action.data)
     }
-    return state;
-  };
+    return state
+  }
 }
 
 /**
@@ -80,14 +80,14 @@ function getReducer(reducers, initialState = null) {
  */
 function filterReducers(reducers) {
   if (!reducers) {
-    return reducers;
+    return reducers
   }
 
   return Object.keys(reducers).reduce((acc, action) => {
     // Filter out non-function entries
     if (typeof reducers[action] === 'function') {
-      acc[action] = reducers[action];
+      acc[action] = reducers[action]
     }
-    return acc;
-  }, {});
+    return acc
+  }, {})
 }
