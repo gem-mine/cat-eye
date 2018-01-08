@@ -282,5 +282,11 @@ export const router = {
   Routes,
   getFlat() {
     return _routers
+  },
+  getSub(key) {
+    if (!key) {
+      key = ROOT
+    }
+    return _sub[key]
   }
 }
