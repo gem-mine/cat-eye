@@ -1,6 +1,6 @@
 {
   "name": "cat-eye",
-  "version": "2.1.3-alpha",
+  "version": "2.1.4-alpha",
   "description": "make react-redux easy",
   "keywords": [
     "react-redux",
