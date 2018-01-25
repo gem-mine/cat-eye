@@ -12,11 +12,16 @@ export let dispatch = warning
 
 export let getState = warning
 
+export const store = {
+  dispatch,
+  getState
+}
+
 // 只在 store.js 中被使用
 export default function createMiddleware() {
   return middlewareAPI => {
-    dispatch = middlewareAPI.dispatch
-    getState = middlewareAPI.getState
+    store.dispatch = dispatch = middlewareAPI.dispatch
+    store.getState = getState = middlewareAPI.getState
 
     return next => action => {
       let effectResult

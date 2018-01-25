@@ -11,9 +11,13 @@ import Router from './router'
 import * as rr from 'rr4i'
 import queryString from './queryString'
 import { urlFor, router, Routes } from './routerHelper'
+import { store } from './middleware'
 import pathToRegexp from 'path-to-regexp'
 const { Route, Redirect, Switch, Prompt, withRouter, Link, NavLink } = rr
 const { setIn, getIn } = ZI
+const getState = function () {
+  return store.getState()
+}
 
 export default {
   model,
@@ -23,6 +27,7 @@ export default {
   connect,
   smart,
   render,
+  getState,
   ZI,
   setIn,
   getIn,
@@ -54,6 +59,7 @@ export {
   connect,
   smart,
   render,
+  getState,
   ZI,
   setIn,
   getIn,
