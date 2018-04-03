@@ -163,6 +163,8 @@ function proxy(cfg) {
             throw error
           }
         })
+    } else {
+      return new Promise(() => {})
     }
   }
 
