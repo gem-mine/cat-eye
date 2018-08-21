@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import axios from 'axios'
 import model from './model'
 import smart from './connect'
 import { actions } from './actions'
@@ -9,7 +10,7 @@ import request from './request'
 import * as ZI from 'zero-immutable'
 import Router from './router'
 import * as rr from 'rr4i'
-import queryString from './queryString'
+import queryString from 'gem-mine-qs'
 import { urlFor, router, Routes } from './routerHelper'
 import { store } from './middleware'
 import pathToRegexp from 'path-to-regexp'
@@ -32,6 +33,7 @@ export default {
   setIn,
   getIn,
 
+  axios,
   request,
 
   rr,
@@ -63,7 +65,10 @@ export {
   ZI,
   setIn,
   getIn,
+
+  axios,
   request,
+
   rr,
   Router,
   Route,
@@ -73,6 +78,7 @@ export {
   withRouter,
   Link,
   NavLink,
+
   queryString,
   pathToRegexp,
   urlFor,
