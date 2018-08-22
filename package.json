@@ -1,6 +1,6 @@
 {
   "name": "cat-eye",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "make react-redux easy",
   "keywords": [
     "react-redux",
@@ -17,6 +17,9 @@
     "build": "babel ./src --out-dir ./lib",
     "lint": "eslint --ext .js src"
   },
+  "files": [
+    "lib"
+  ],
   "dependencies": {
     "axios": "^0.16.2",
     "decode-uri-component": "^0.2.0",
