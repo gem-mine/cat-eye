@@ -1,6 +1,6 @@
 {
   "name": "cat-eye",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "description": "make react-redux easy",
   "keywords": [
     "react-redux",
@@ -14,7 +14,8 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "babel ./src --out-dir ./lib",
-    "lint": "eslint --ext .js src"
+    "lint": "eslint --ext .js src",
+    "prepublish": "npm run build"
   },
   "files": [
     "lib"
