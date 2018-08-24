@@ -1,12 +1,11 @@
 {
   "name": "cat-eye",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "make react-redux easy",
   "keywords": [
     "react-redux",
     "model",
-    "mirror",
-    "mirrorx"
+    "mirror"
   ],
   "author": {
     "email": "caolvchong@gmail.com",
