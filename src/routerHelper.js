@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Switch, Redirect } from 'rr4i'
 import pathToRegexp from 'path-to-regexp'
-import queryString from './queryString'
+import queryString from 'gem-mine-qs'
 import smart from './connect'
 
 const ROOT = '__root__'
