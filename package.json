@@ -26,7 +26,7 @@
     "gem-mine-qs": "^0.1.6",
     "path-to-regexp": "^2.1.0",
     "react-redux": "^5.0.6",
-    "redux": "^3.7.2",
+    "redux": "^4.0.4",
     "rr4i": "^0.1.7",
     "zero-immutable": "^0.1.5"
   },
